@@ -84,7 +84,9 @@ export const SongScreen = ({navigation, route}) => {
           console.log('failed to load the sound', error);
         } else {
           console.log('Load Sound');
-          soundNew.play();
+          soundNew.play(success => {
+            console.log('🚀 ~ success', success);
+          });
           setSound(soundNew);
           setIsPlaying(true);
           setDuration(soundNew.getDuration());
@@ -164,6 +166,7 @@ export const SongScreen = ({navigation, route}) => {
             sound.release();
             setSound(null);
             setIsPlaying(false);
+            clearInterval(timeInterval);
 
             await dispatch(fetchSongs());
             navigation.goBack();
