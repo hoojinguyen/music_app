@@ -5,8 +5,6 @@ export const POST_FETCH_SUCCESS = 'POST_FETCH_SUCCESS';
 export const POST_FETCH_FAILURE = 'POST_FETCH_FAILURE';
 export const POST_FETCH_LOAD_MORE = 'POST_FETCH_LOAD_MORE';
 
-import DATA_SAMPLE from '../../services/instructions';
-
 const API_URL =
   'https://my-json-server.typicode.com/mesandigital/demo/instructions';
 
@@ -30,11 +28,5 @@ export const fetchPosts = () => {
         });
         throw new Error(err);
       });
-  };
-};
-
-export const loadMorePosts = () => {
-  return async dispatch => {
-    dispatch({type: POST_FETCH_LOAD_MORE, posts: DATA_SAMPLE});
   };
 };
