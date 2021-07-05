@@ -1,2 +1,2 @@
 export * from './songActions';
-export * from './songReducers';
+export * from './songReducer';
