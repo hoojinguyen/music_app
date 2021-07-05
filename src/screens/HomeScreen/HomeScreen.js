@@ -97,33 +97,12 @@ export const HomeScreen = ({navigation, route}) => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.activityIndicatorContainer}>
-        <ActivityIndicator animating={true} />
-      </View>
-    );
-  } else {
-    return (
-      <View style={{flex: 1, backgroundColor: '#343a40'}}>
-        <View style={{marginTop: 40}}></View>
-
-        <SearchBar
-          placeholder="Tìm kiếm bài hát"
-          onChangeText={value => setKeySearch(value)}
-          showLoading={loadingSearch}
-          value={keySearch}
-          containerStyle={{
-            borderWidth: 0,
-            shadowColor: '#343a40',
-            borderBottomColor: 'transparent',
-            borderTopColor: 'transparent',
-          }}
-        />
-
+  const SearchList = () => {
+    if (searchList.length) {
+      return (
         <View
           style={{
-            display: searchList.length ? 'block' : 'none',
+            // display: searchList.length ? 'block' : 'none',
             position: 'absolute',
             backgroundColor: '#343a40',
             zIndex: 100,
@@ -177,6 +156,35 @@ export const HomeScreen = ({navigation, route}) => {
             )}
           />
         </View>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator animating={true} />
+      </View>
+    );
+  } else {
+    return (
+      <View style={{flex: 1, backgroundColor: '#343a40'}}>
+        <View style={{marginTop: 40}}></View>
+        <SearchList />
+        <SearchBar
+          placeholder="Tìm kiếm bài hát"
+          onChangeText={value => setKeySearch(value)}
+          showLoading={loadingSearch}
+          value={keySearch}
+          containerStyle={{
+            borderWidth: 0,
+            shadowColor: '#343a40',
+            borderBottomColor: 'transparent',
+            borderTopColor: 'transparent',
+          }}
+        />
 
         <View style={{flex: 1, backgroundColor: '#343a40'}}>
           <View

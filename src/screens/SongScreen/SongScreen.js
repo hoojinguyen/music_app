@@ -14,7 +14,6 @@ import {
 } from './components';
 
 import {getObject, setObject} from '../../helper/AsyncStorage';
-import {ListSong} from '../HomeScreen/components';
 
 const getAudioTimeString = seconds => {
   const m = parseInt((seconds % (60 * 60)) / 60);
@@ -54,12 +53,83 @@ export const SongScreen = ({navigation, route}) => {
   };
 
   async function handleResetSound() {
+    console.log('handleResetSound --------------');
     sound.stop();
     sound.release();
     setSound(null);
     setIsPlaying(false);
 
     await sleep(500);
+  }
+
+  async function newSound() {
+    console.log('newSound --------------', song);
+    await handleResetSound();
+
+    var soundNew = new Sound(song.href, '', error => {
+      if (error) {
+        console.log('failed to load the sound', error);
+      } else {
+        console.log('Load Sound');
+        soundNew.play(success => {
+          console.log('🚀 ~ success', success);
+        });
+        setSound(soundNew);
+        setIsPlaying(true);
+        setDuration(soundNew.getDuration());
+      }
+    });
+  }
+
+  async function nextSong() {
+    console.log('nextSong --------------', song);
+    let length = songList.length;
+    let pos = positionSong + 1;
+
+    if (isRandom) {
+      const rand = Math.floor(Math.random() * length);
+      pos = rand != pos ? rand : pos;
+    }
+
+    if (pos >= length || pos < 0) {
+      pos = 0;
+    }
+
+    const songNew = songs[pos];
+
+    if (songNew) {
+      await handleResetSound();
+
+      setSong(songNew);
+      setKeySong(songNew.title);
+      setPositionSong(pos);
+    }
+  }
+
+  async function previousSong() {
+    console.log('previousSong --------------', song);
+
+    let length = songList.length;
+    let pos = positionSong - 1;
+
+    if (isRandom) {
+      const rand = Math.floor(Math.random() * length);
+      pos = rand != pos ? rand : pos;
+    }
+
+    if (pos >= length || pos < 0) {
+      pos = 0;
+    }
+
+    const songNew = songs[pos];
+
+    if (songNew) {
+      await handleResetSound();
+
+      setSong(songNew);
+      setKeySong(songNew.title);
+      setPositionSong(pos);
+    }
   }
 
   useEffect(() => {
@@ -134,7 +204,20 @@ export const SongScreen = ({navigation, route}) => {
 
     setPlaySecondsString(playSecondsString);
     setDurationString(durationString);
-  }, [playSeconds, duration]);
+
+    if (
+      playSeconds > 0 &&
+      duration > 0 &&
+      Math.ceil(playSeconds) == Math.ceil(duration)
+    ) {
+      console.log('replay');
+      if (isLoop) {
+        newSound();
+      } else {
+        nextSong();
+      }
+    }
+  }, [playSeconds, duration, song, isLoop, isRandom]);
 
   if (isLoading || !song) {
     return (
@@ -252,52 +335,8 @@ export const SongScreen = ({navigation, route}) => {
                 sound.pause();
               }
             }}
-            handleNextSong={async () => {
-              let length = songList.length;
-              let pos = positionSong + 1;
-
-              if (isRandom) {
-                const rand = Math.floor(Math.random() * length);
-                pos = rand != pos ? rand : pos;
-              }
-
-              if (pos >= length || pos < 0) {
-                pos = 0;
-              }
-
-              const songNew = songs[pos];
-
-              if (songNew) {
-                await handleResetSound();
-
-                setSong(songNew);
-                setKeySong(songNew.title);
-                setPositionSong(pos);
-              }
-            }}
-            handlePreviousSong={async () => {
-              let length = songList.length;
-              let pos = positionSong - 1;
-
-              if (isRandom) {
-                const rand = Math.floor(Math.random() * length);
-                pos = rand != pos ? rand : pos;
-              }
-
-              if (pos >= length || pos < 0) {
-                pos = 0;
-              }
-
-              const songNew = songs[pos];
-
-              if (songNew) {
-                await handleResetSound();
-
-                setSong(songNew);
-                setKeySong(songNew.title);
-                setPositionSong(pos);
-              }
-            }}
+            handleNextSong={() => nextSong()}
+            handlePreviousSong={() => previousSong()}
           />
         </View>
       </View>

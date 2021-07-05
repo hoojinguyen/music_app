@@ -96,6 +96,14 @@
 			name = Music;
 			sourceTree = "<group>";
 		};
+		26A150D71C724361BE9854FA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +130,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				A5ECCFBD2F3CFA973036EAA4 /* Pods */,
+				26A150D71C724361BE9854FA /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
